@@ -50,15 +50,21 @@ public class frmMain extends javax.swing.JFrame {
         txtresi = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
-        txtpol = new javax.swing.JTextField();
+        txtkeluar = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        txtHari = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        txtHarga = new javax.swing.JTextField();
         rdMotor = new javax.swing.JRadioButton();
         rdMobil = new javax.swing.JRadioButton();
-        txtkeluar = new com.toedter.calendar.JDateChooser();
-        txtmasuk = new com.toedter.calendar.JDateChooser();
+        Hitung = new javax.swing.JButton();
+        txtmasuk = new javax.swing.JTextField();
+        txtpol = new javax.swing.JTextField();
         jPanel3 = new javax.swing.JPanel();
         btnEdit = new javax.swing.JButton();
         btnAdd = new javax.swing.JButton();
@@ -113,8 +119,8 @@ public class frmMain extends javax.swing.JFrame {
         jLabel6.setText("No Resi");
         jPanel1.add(jLabel6);
         jLabel6.setBounds(10, 90, 60, 14);
-        jPanel1.add(txtpol);
-        txtpol.setBounds(10, 170, 290, 30);
+        jPanel1.add(txtkeluar);
+        txtkeluar.setBounds(10, 350, 290, 30);
 
         jLabel7.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel7.setText("No Pol");
@@ -136,6 +142,31 @@ public class frmMain extends javax.swing.JFrame {
         jPanel1.add(jLabel10);
         jLabel10.setBounds(10, 330, 140, 14);
 
+        jLabel11.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel11.setText("Hari Penitipan");
+        jPanel1.add(jLabel11);
+        jLabel11.setBounds(10, 390, 120, 14);
+        jPanel1.add(txtHari);
+        txtHari.setBounds(10, 410, 70, 30);
+
+        jLabel3.setText("Hari");
+        jPanel1.add(jLabel3);
+        jLabel3.setBounds(90, 414, 30, 20);
+
+        jLabel12.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel12.setText("Total Harga");
+        jPanel1.add(jLabel12);
+        jLabel12.setBounds(10, 450, 120, 14);
+
+        txtHarga.setEditable(false);
+        txtHarga.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtHargaActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtHarga);
+        txtHarga.setBounds(10, 470, 290, 30);
+
         buttonGroup1.add(rdMotor);
         rdMotor.setText("Sepeda Motor");
         jPanel1.add(rdMotor);
@@ -145,10 +176,19 @@ public class frmMain extends javax.swing.JFrame {
         rdMobil.setText("Mobil");
         jPanel1.add(rdMobil);
         rdMobil.setBounds(190, 230, 110, 30);
-        jPanel1.add(txtkeluar);
-        txtkeluar.setBounds(10, 350, 290, 30);
+
+        Hitung.setText("Hitung");
+        Hitung.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                HitungActionPerformed(evt);
+            }
+        });
+        jPanel1.add(Hitung);
+        Hitung.setBounds(120, 413, 80, 30);
         jPanel1.add(txtmasuk);
         txtmasuk.setBounds(10, 290, 290, 30);
+        jPanel1.add(txtpol);
+        txtpol.setBounds(10, 170, 290, 30);
 
         getContentPane().add(jPanel1);
         jPanel1.setBounds(20, 130, 360, 530);
@@ -257,11 +297,8 @@ public class frmMain extends javax.swing.JFrame {
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         // TODO add your handling code here:
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy");
-        String tmasuk = dateFormat.format(txtmasuk.getDate());
-        String tkeluar = dateFormat.format(txtkeluar.getDate());
         
-        if ("".equals(txtpetugas.getText()) ||"".equals(txtresi.getText()) || "".equals(txtpol.getText()) ||"".equals(txtmasuk.getDate())||"".equals(txtkeluar.getDate()))
+        if ("".equals(txtpetugas.getText()) ||"".equals(txtresi.getText()) || "".equals(txtpol.getText()) ||"".equals(txtmasuk.getText())||"".equals(txtkeluar.getText())||"".equals(txtHari.getText()))
         {
             JOptionPane.showMessageDialog(this, "Harap Lengkapi Data", "Error", JOptionPane.WARNING_MESSAGE);
         }else{
@@ -275,10 +312,13 @@ public class frmMain extends javax.swing.JFrame {
             }
 
             String SQL = "UPDATE t_titipkendaraan SET"
-            + "petugas='"+txtpetugas.getText()+"',"
-            + "no_resi='"+txtresi.getText()+"',"
-            + "jk='"+JK+"',"
-            + "no_pol='"+txtpol.getText()+"' WHERE no_resi='"+txtresi.getText()+"'";
+            + "WHERE petugas='"+txtpetugas.getText()+"',"
+            + "WHERE no_resi='"+txtresi.getText()+"',"
+            + "WHERE no_pol='"+txtkeluar.getText()+"',"
+            + "WHERE jk='"+JK+"',"
+            + "WHERE t_masuk='"+txtmasuk.getText()+"'," 
+            +"WHERE t_keluar='"+txtkeluar.getText()+"',"
+            +"WHERE harga='"+txtHarga.getText()+"'  WHERE no_resi='"+txtresi.getText()+"'";
             
             int status = KoneksiDB.execute(SQL);
             if (status == 1)
@@ -294,21 +334,17 @@ public class frmMain extends javax.swing.JFrame {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-mm-yyyy");
-        String tmasuk = dateFormat.format(txtmasuk.getDate());
-        String tkeluar = dateFormat.format(txtkeluar.getDate());
-        
-        Date masuk = txtmasuk.getDate();
-        Date keluar = txtkeluar.getDate();
-        long miliseconds = keluar.getTime() - masuk.getTime();
-        int hari = (int)miliseconds/(1000*60*60*24);
-        int harga = hari*3000;
-        
-         String JK = "";
-         String ptgs = txtpetugas.getText();
-         String resi = txtresi.getText();
-         String nopol = txtpol.getText();
-         
+    
+        if ("".equals(txtpetugas.getText()) || "".equals(txtresi.getText()) ||
+            "".equals(txtpol.getText()) || "".equals(txtmasuk.getText()) || "".equals(txtkeluar.getText()) || "".equals(txtHarga.getText())  )
+        {
+            JOptionPane.showMessageDialog(this, "Harap Lengkapi Data", "Error", JOptionPane.WARNING_MESSAGE);
+        }
+
+        else
+        {
+           
+          String JK = "";
           if (rdMotor.isSelected())
             {
                 JK = "Sepeda Motor";
@@ -317,20 +353,15 @@ public class frmMain extends javax.swing.JFrame {
             {
                 JK = "Mobil";
             }
-         
-        
-        if ("".equals(txtpetugas.getText()) || "".equals(txtresi.getText()) ||
-            "".equals(txtpol.getText())||"".equals(JK)  )
-        {
-            JOptionPane.showMessageDialog(this, "Harap Lengkapi Data", "Error", JOptionPane.WARNING_MESSAGE);
-        }
-
-        else
-        {
           
             String SQL = "INSERT INTO t_titipkendaraan (petugas,no_resi,no_pol,jk,t_masuk,t_keluar,harga) "
-            + "VALUES('"+txtpetugas.getText()+"','"+txtresi.getText()+"','"+txtpol.getText()+"','"+JK+"',"
-            + ",'"+tmasuk+"','"+tkeluar+"','"+total+"')";
+            + "VALUES('"+txtpetugas.getText()+"',"
+                    + "'"+txtresi.getText()+"',"
+                    + "'"+txtpol.getText()+"',"
+                    + "'"+JK+"',"
+                    + "'"+txtmasuk.getText()+"',"
+                    + "'"+txtkeluar.getText()+"',"
+                    + "'"+txtHarga.getText()+"')";
             int status = KoneksiDB.execute(SQL);
             
             
@@ -350,10 +381,11 @@ public class frmMain extends javax.swing.JFrame {
         // TODO add your handling code here:
         txtresi.setText("");
         txtpetugas.setText("");
-        txtpol.setText("");
+        txtkeluar.setText("");
         buttonGroup1.clearSelection();
-        txtmasuk.setDateFormatString("");
-        txtkeluar.setDateFormatString("");
+        txtmasuk.setText("");
+        txtkeluar.setText("");
+        txtHarga.setText("");
       
     }//GEN-LAST:event_ResetActionPerformed
 
@@ -404,8 +436,33 @@ public class frmMain extends javax.swing.JFrame {
 
     private void tblDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDataMouseClicked
         // TODO add your handling code here:
-     
+    
+      int baris = tblData.getSelectedRow();
+        if (baris != -1) {
+            txtpetugas.setText(tblData.getValueAt(baris,0).toString());
+            txtresi.setText(tblData.getValueAt(baris,1).toString());
+            txtpol.setText(tblData.getValueAt(baris,2).toString());
+            if ("Sepeda Motor".equals(tblData.getValueAt(baris,3).toString())) {
+                rdMotor.setSelected(true);
+            }else{
+                rdMobil.setSelected(true);
+            }
+            txtmasuk.setText(tblData.getValueAt(baris,4).toString());
+             txtkeluar.setText(tblData.getValueAt(baris,5).toString());
+            txtHarga.setText(tblData.getValueAt(baris,6).toString());
+        }
     }//GEN-LAST:event_tblDataMouseClicked
+
+    private void txtHargaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHargaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtHargaActionPerformed
+
+    private void HitungActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_HitungActionPerformed
+        // TODO add your handling code here:
+        int hrg = Integer.parseInt(txtHari.getText());
+        int total = hrg*3000;
+        txtHarga.setText(String.valueOf(total));
+    }//GEN-LAST:event_HitungActionPerformed
 
     /**
      * @param args the command line arguments
@@ -443,6 +500,7 @@ public class frmMain extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Hitung;
     private javax.swing.JButton Reset;
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;
@@ -451,6 +509,9 @@ public class frmMain extends javax.swing.JFrame {
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
@@ -466,8 +527,10 @@ public class frmMain extends javax.swing.JFrame {
     private javax.swing.JRadioButton rdMotor;
     private javax.swing.JTable tblData;
     private javax.swing.JLabel tgl;
-    private com.toedter.calendar.JDateChooser txtkeluar;
-    private com.toedter.calendar.JDateChooser txtmasuk;
+    private javax.swing.JTextField txtHarga;
+    private javax.swing.JTextField txtHari;
+    private javax.swing.JTextField txtkeluar;
+    private javax.swing.JTextField txtmasuk;
     private javax.swing.JTextField txtpetugas;
     private javax.swing.JTextField txtpol;
     private javax.swing.JTextField txtresi;
